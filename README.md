@@ -66,6 +66,11 @@ python setup.py build develop
   --config_file configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml \
   sample.pretrained_model_path=./pretrained_models/COCO-stuff_256x256_LayoutDiffusion_small_ema_1700000.pt
 ```
+```bash
+  python scripts/launch_gradio_app.py  \
+  --config_file configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml \
+  sample.pretrained_model_path=./log/COCO-stuff_256x256/LayoutDiffusion-v7_small/ema_0.9999_0200000.pt --share
+```
 add '--share' after '--config_file XXX' to allow for remote link share
 
 ## Setup Dataset
@@ -101,7 +106,7 @@ python -m torch.distributed.launch \
 ## Training on Image Space
 ```bash
 python -m torch.distributed.launch \
-       --nproc_per_node 8 \
+       --nproc_per_node 0 \
        scripts/image_train_for_layout.py \
        --config_file ./configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml
 ```
