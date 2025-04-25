@@ -30,7 +30,7 @@ from layout_diffusion.dataset.augmentations import RandomSampleCrop, RandomMirro
 
 class CocoSceneGraphDataset(Dataset):
     def __init__(self, image_dir, instances_json, stuff_json=None,
-                 stuff_only=False, image_size=(64, 64), mask_size=16,
+                 stuff_only=True, image_size=(64, 64), mask_size=16,
                  max_num_samples=None,
                  include_relationships=True, min_object_size=0.02,
                  min_objects_per_image=3, max_objects_per_image=8, left_right_flip=False,
@@ -210,19 +210,11 @@ class CocoSceneGraphDataset(Dataset):
                     self.image_id_to_size.pop(image_id, None)
                     self.image_id_to_objects.pop(image_id, None)
 
-        # First assign __image__ to 0
+        # COCO category labels start at 1, so use 0 for __image__
         self.vocab['object_name_to_idx']['__image__'] = 0
 
-        # Shift all other object indices up by 1
-        for name, idx in list(self.vocab['object_name_to_idx'].items()):
-            if name != '__image__':
-                self.vocab['object_name_to_idx'][name] = idx + 1
-
-        # Assign __null__ to the last index
-        max_idx = max(self.vocab['object_name_to_idx'].values())
-        self.vocab['object_name_to_idx']['__null__'] = max_idx + 1
-
-        print(self.vocab['object_name_to_idx'])
+        # None for 184
+        self.vocab['object_name_to_idx']['__null__'] = 184
 
         # Build object_idx_to_name
         name_to_idx = self.vocab['object_name_to_idx']
@@ -486,11 +478,11 @@ def build_coco_dsets(cfg, mode='train'):
         stuff_whitelist=params.stuff_whitelist,
         include_other=params.include_other,
         include_relationships=params.include_relationships,
-        use_deprecated_stuff2017=None,
-        deprecated_coco_stuff_ids_txt=None,
+        use_deprecated_stuff2017=params.use_deprecated_stuff2017,
+        deprecated_coco_stuff_ids_txt=os.path.join(params.root_dir, params[mode].deprecated_stuff_ids_txt),
         image_dir=os.path.join(params.root_dir, params[mode].image_dir),
         instances_json=os.path.join(params.root_dir, params[mode].instances_json),
-        stuff_json=None,
+        stuff_json=os.path.join(params.root_dir, params[mode].stuff_json),
         max_num_samples=params[mode].max_num_samples,
         left_right_flip=params[mode].left_right_flip,
         use_MinIoURandomCrop=params[mode].use_MinIoURandomCrop,

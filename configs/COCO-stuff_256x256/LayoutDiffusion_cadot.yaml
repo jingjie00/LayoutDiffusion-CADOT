@@ -77,20 +77,24 @@ data:
     train:
       image_dir: 'train'
       instances_json: 'train/_annotations.coco.json'
+      stuff_json: None
+      deprecated_stuff_ids_txt: None
       max_num_samples: null
       specific_image_ids: [ ]
       shuffle: True
-      batch_size: 4           # 8 GPUs, total_batch_size=4x8=32
+      batch_size: 10           # 8 GPUs, total_batch_size=4x8=32
       left_right_flip: True
       use_MinIoURandomCrop: True
 
     val:
       image_dir: 'valid'
       instances_json: 'valid/_annotations.coco.json'
+      stuff_json: None
+      deprecated_stuff_ids_txt: None
       max_num_samples: 1024
       specific_image_ids: [ ]
       shuffle: False
-      batch_size: 8
+      batch_size: 16
       left_right_flip: False
       use_MinIoURandomCrop: False
 
@@ -123,7 +127,7 @@ sample:
   log_root: 'COCO-stuff_256x256/LayoutDiffusion-v7_cadot'
   sample_suffix: 'model0400000'
   pretrained_model_path: './log/COCO-stuff_256x256/LayoutDiffusion-v7_cadot/ema_0.9999_0400000.pt'
-  classifier_free: True
+  deprecated_stuff_ids_txt: ''
   classifier_free_scale: 1.0
   sample_times: 1
   timestep_respacing: [ 200 ]

@@ -9,21 +9,7 @@ from layout_diffusion.layout_diffusion_unet import build_model
 from layout_diffusion.util import fix_seed
 
 # Dictionary mapping object names to indices
-object_name_to_idx = {'person': 1, 'bicycle': 2, 'car': 3, 'motorcycle': 4, 'airplane': 5, 'bus': 6, 'train': 7, 'truck': 8, 'boat': 9, 'traffic light': 10, 'fire hydrant': 11, 'stop sign': 13, 'parking meter': 14,
-        'bench': 15, 'bird': 16, 'cat': 17, 'dog': 18, 'horse': 19, 'sheep': 20, 'cow': 21, 'elephant': 22, 'bear': 23, 'zebra': 24, 'giraffe': 25, 'backpack': 27, 'umbrella': 28, 'handbag': 31,
-        'tie': 32, 'suitcase': 33, 'frisbee': 34, 'skis': 35, 'snowboard': 36, 'sports ball': 37, 'kite': 38, 'baseball bat': 39, 'baseball glove': 40, 'skateboard': 41, 'surfboard': 42,
-        'tennis racket': 43, 'bottle': 44, 'wine glass': 46, 'cup': 47, 'fork': 48, 'knife': 49, 'spoon': 50, 'bowl': 51, 'banana': 52, 'apple': 53, 'sandwich': 54, 'orange': 55, 'broccoli': 56,
-        'carrot': 57, 'hot dog': 58, 'pizza': 59, 'donut': 60, 'cake': 61, 'chair': 62, 'couch': 63, 'potted plant': 64, 'bed': 65, 'dining table': 67, 'toilet': 70, 'tv': 72, 'laptop': 73,
-        'mouse': 74, 'remote': 75, 'keyboard': 76, 'cell phone': 77, 'microwave': 78, 'oven': 79, 'toaster': 80, 'sink': 81, 'refrigerator': 82, 'book': 84, 'clock': 85, 'vase': 86, 'scissors': 87,
-        'teddy bear': 88, 'hair drier': 89, 'toothbrush': 90, 'banner': 92, 'blanket': 93, 'branch': 94, 'bridge': 95, 'building-other': 96, 'bush': 97, 'cabinet': 98, 'cage': 99, 'cardboard': 100,
-        'carpet': 101, 'ceiling-other': 102, 'ceiling-tile': 103, 'cloth': 104, 'clothes': 105, 'clouds': 106, 'counter': 107, 'cupboard': 108, 'curtain': 109, 'desk-stuff': 110, 'dirt': 111,
-        'door-stuff': 112, 'fence': 113, 'floor-marble': 114, 'floor-other': 115, 'floor-stone': 116, 'floor-tile': 117, 'floor-wood': 118, 'flower': 119, 'fog': 120, 'food-other': 121, 'fruit': 122,
-        'furniture-other': 123, 'grass': 124, 'gravel': 125, 'ground-other': 126, 'hill': 127, 'house': 128, 'leaves': 129, 'light': 130, 'mat': 131, 'metal': 132, 'mirror-stuff': 133, 'moss': 134,
-        'mountain': 135, 'mud': 136, 'napkin': 137, 'net': 138, 'paper': 139, 'pavement': 140, 'pillow': 141, 'plant-other': 142, 'plastic': 143, 'platform': 144, 'playingfield': 145, 'railing': 146,
-        'railroad': 147, 'river': 148, 'road': 149, 'rock': 150, 'roof': 151, 'rug': 152, 'salad': 153, 'sand': 154, 'sea': 155, 'shelf': 156, 'sky-other': 157, 'skyscraper': 158, 'snow': 159,
-        'solid-other': 160, 'stairs': 161, 'stone': 162, 'straw': 163, 'structural-other': 164, 'table': 165, 'tent': 166, 'textile-other': 167, 'towel': 168, 'tree': 169, 'vegetable': 170,
-        'wall-brick': 171, 'wall-concrete': 172, 'wall-other': 173, 'wall-panel': 174, 'wall-stone': 175, 'wall-tile': 176, 'wall-wood': 177, 'water-other': 178, 'waterdrops': 179,
-        'window-blind': 180, 'window-other': 181, 'wood': 182, 'other': 183, '__image__': 0, '__null__': 184}
+{'small-object': 1, 'basketball field': 2, 'building': 3, 'crosswalk': 4, 'football field': 5, 'graveyard': 6, 'large vehicle': 7, 'medium vehicle': 8, 'playground': 9, 'roundabout': 10, 'ship': 11, 'small vehicle': 12, 'swimming pool': 13, 'tennis court': 14, 'train': 15, '__image__': 0, '__null__': 16}
 
 class LayoutImageGenerator:
     def __init__(self, config_path, model_path, seed=None):
@@ -135,7 +121,7 @@ class LayoutImageGenerator:
         }
         
         # Set image as the first object
-        model_kwargs['obj_class'][0][0] = object_name_to_idx['__image__']
+        model_kwargs['obj_class'][0][0] = object_name_to_idx['small-object']
         model_kwargs['obj_bbox'][0][0] = torch.FloatTensor([0, 0, 1, 1])
         model_kwargs['is_valid_obj'][0][0] = 1.0
         
@@ -148,7 +134,7 @@ class LayoutImageGenerator:
             
             if obj_class == 'pad':
                 obj_class = '__null__'
-                
+        
             model_kwargs['obj_bbox'][0][obj_id] = torch.FloatTensor([x0, y0, x1, y1])
             model_kwargs['obj_class'][0][obj_id] = object_name_to_idx[obj_class]
             model_kwargs['is_valid_obj'][0][obj_id] = 1
@@ -200,8 +186,8 @@ class LayoutImageGenerator:
 if __name__ == "__main__":
     #/home/jtan/LayoutDiffusion-CADOT/pretrained_models/COCO-stuff_256x256_LayoutDiffusion_small_ema_1700000.pt
     parser = argparse.ArgumentParser(description="Generate image from layout")
-    parser.add_argument("--config_file", type=str, default='./configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml')
-    parser.add_argument("--model_path", type=str, help="Path to pretrained model", default='./trained/ema_0.9999_0200000.pt')
+    parser.add_argument("--config_file", type=str, default='./configs/COCO-stuff_256x256/LayoutDiffusion_cadot.yaml')
+    parser.add_argument("--model_path", type=str, help="Path to pretrained model", default='./log/COCO-stuff_256x256/LayoutDiffusion_cadot/ema_0.9999_0080000.pt')
     parser.add_argument("--output_path", type=str, default="generated_image.png", help="Path to save generated image")
     parser.add_argument("--steps", type=int, default=25, help="Number of diffusion steps")
     parser.add_argument("--seed", type=int, default=2333, help="Random seed")
@@ -212,16 +198,10 @@ if __name__ == "__main__":
     
     # Example layout: [class, x0, y0, x1, y1]
     # First object must be 'image' with coordinates [0,0,1,1]
-    example_layout = [['image', 0.0, 0.0, 1.0, 1.0],
-                     ['desk-stuff', 0.0, 0.5791666507720947, 1.0, 1.0],
-                     ['laptop', 0.001687500043772161, 0.41574999690055847, 0.3943749964237213, 0.9820416569709778],
-                     ['window-blind', 0.0, 0.0, 0.25312501192092896, 0.4791666567325592],
-                     ['plastic', 0.20000000298023224, 0.05000000074505806, 1.0, 0.7208333611488342],
-                     ['wall-concrete', 0.17812499403953552, 0.0, 1.0, 0.5916666388511658],
-                     ['keyboard', 0.503531277179718, 0.6351667046546936, 0.9857500195503235, 0.824833333492279],
-                     ['tv', 0.39268749952316284, 0.04774999991059303, 0.7415624856948853, 0.4207916557788849],
-                     ['light', 0.840624988079071, 0.02083333395421505, 0.925000011920929, 0.42500001192092896],
-                     ['pad', 0.0, 0.0, 0.0, 0.0]]
+    example_layout = [['train', 0.0, 0.0, 1.0, 1.0],
+                     ['playground', 0.0, 0.5791666507720947, 1.0, 1.0],
+                     ['building', 0.001687500043772161, 0.41574999690055847, 0.3943749964237213, 0.9820416569709778],
+                     ['crosswalk', 0.0, 0.0, 0.25312501192092896, 0.4791666567325592]]
 
     # Generate the image
     generated_image = generator.generate(
