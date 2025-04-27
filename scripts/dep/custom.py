@@ -9,7 +9,9 @@ from layout_diffusion.layout_diffusion_unet import build_model
 from layout_diffusion.util import fix_seed
 
 # Dictionary mapping object names to indices
-{'small-object': 1, 'basketball field': 2, 'building': 3, 'crosswalk': 4, 'football field': 5, 'graveyard': 6, 'large vehicle': 7, 'medium vehicle': 8, 'playground': 9, 'roundabout': 10, 'ship': 11, 'small vehicle': 12, 'swimming pool': 13, 'tennis court': 14, 'train': 15, '__image__': 0, '__null__': 16}
+object_name_to_idx = {"__image__": 0, "__null__": 1, "small-object": 2, "basketball field": 3, "building": 4, "crosswalk": 5, "football field": 6, "graveyard": 7, "large vehicle": 8, "medium vehicle": 9, "playground": 10, "roundabout": 11, "ship": 12, "small vehicle": 13, "swimming pool": 14, "tennis court": 15, "train": 16}
+
+
 
 class LayoutImageGenerator:
     def __init__(self, config_path, model_path, seed=None):
@@ -121,7 +123,7 @@ class LayoutImageGenerator:
         }
         
         # Set image as the first object
-        model_kwargs['obj_class'][0][0] = object_name_to_idx['small-object']
+        model_kwargs['obj_class'][0][0] = object_name_to_idx['__image__']
         model_kwargs['obj_bbox'][0][0] = torch.FloatTensor([0, 0, 1, 1])
         model_kwargs['is_valid_obj'][0][0] = 1.0
         
@@ -173,13 +175,17 @@ class LayoutImageGenerator:
         # Process the generated image
         sample = sample.clamp(-1, 1)
         generate_img = np.array(sample[0].cpu().permute(1,2,0) * 127.5 + 127.5, dtype=np.uint8)
-
-
         
-        # Save the image if output path is provided
+        # Save the images if output path is provided
         if output_path:
+            # Save generated image
             Image.fromarray(generate_img).save(output_path)
             print(f"Generated image saved to {output_path}")
+            
+            # Save original image (x.png)
+            original_path = output_path.replace('.png', '_x.png')
+            Image.fromarray(generate_img).save(original_path)
+            print(f"Original image saved to {original_path}")
             
         return generate_img
 
@@ -187,7 +193,8 @@ if __name__ == "__main__":
     #/home/jtan/LayoutDiffusion-CADOT/pretrained_models/COCO-stuff_256x256_LayoutDiffusion_small_ema_1700000.pt
     parser = argparse.ArgumentParser(description="Generate image from layout")
     parser.add_argument("--config_file", type=str, default='./configs/COCO-stuff_256x256/LayoutDiffusion_cadot.yaml')
-    parser.add_argument("--model_path", type=str, help="Path to pretrained model", default='./log/COCO-stuff_256x256/LayoutDiffusion_cadot/ema_0.9999_0080000.pt')
+    parser.add_argument("--model_path", type=str, help="Path to pretrained model", default='./log/COCO-stuff_256x256/LayoutDiffusion_cadot/ema_0.9999_0230000.pt')
+
     parser.add_argument("--output_path", type=str, default="generated_image.png", help="Path to save generated image")
     parser.add_argument("--steps", type=int, default=25, help="Number of diffusion steps")
     parser.add_argument("--seed", type=int, default=2333, help="Random seed")
@@ -198,7 +205,7 @@ if __name__ == "__main__":
     
     # Example layout: [class, x0, y0, x1, y1]
     # First object must be 'image' with coordinates [0,0,1,1]
-    example_layout = [['train', 0.0, 0.0, 1.0, 1.0],
+    example_layout = [['image', 0.0, 0.0, 1.0, 1.0],
                      ['playground', 0.0, 0.5791666507720947, 1.0, 1.0],
                      ['building', 0.001687500043772161, 0.41574999690055847, 0.3943749964237213, 0.9820416569709778],
                      ['crosswalk', 0.0, 0.0, 0.25312501192092896, 0.4791666567325592]]
