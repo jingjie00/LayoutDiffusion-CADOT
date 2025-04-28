@@ -34,6 +34,10 @@ object_name_to_idx = {'person': 1, 'bicycle': 2, 'car': 3, 'motorcycle': 4, 'air
         'wall-brick': 171, 'wall-concrete': 172, 'wall-other': 173, 'wall-panel': 174, 'wall-stone': 175, 'wall-tile': 176, 'wall-wood': 177, 'water-other': 178, 'waterdrops': 179,
         'window-blind': 180, 'window-other': 181, 'wood': 182, 'other': 183, '__image__': 0, '__null__': 184}
 
+#{'small-object': 1, 'basketball field': 2, 'building': 3, 'crosswalk': 4, 'football field': 5, 'graveyard': 6, 'large vehicle': 7, 'medium vehicle': 8, 'playground': 9, 'roundabout': 10, 'ship': 11, 'small vehicle': 12, 'swimming pool': 13, 'tennis court': 14, 'train': 15, '__image__': 0, '__null__': 16}
+
+# object_name_to_idx = {'small-object': 1, 'basketball field': 2, 'building': 3, 'crosswalk': 4, 'football field': 5, 'graveyard': 6, 'large vehicle': 7, 'medium vehicle': 8, 'playground': 9, 'roundabout': 10, 'ship': 11, 'small vehicle': 12, 'swimming pool': 13, 'tennis court': 14, 'train': 15, '__image__': 0, '__null__': 16}
+
 
 @torch.no_grad()
 def layout_to_image_generation(cfg, model_fn, noise_schedule, custom_layout_dict):

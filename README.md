@@ -69,7 +69,7 @@ python setup.py build develop
 ```bash
   python scripts/launch_gradio_app.py  \
   --config_file configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml \
-  sample.pretrained_model_path=./log/COCO-stuff_256x256/LayoutDiffusion-v7_small/ema_0.9999_0200000.pt --share
+  sample.pretrained_model_path=./pretrained_models/layout_diffusion_small.pt --share
 ```
 add '--share' after '--config_file XXX' to allow for remote link share
 
