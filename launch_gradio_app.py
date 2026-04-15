@@ -192,4 +192,4 @@ if __name__ == "__main__":
 
     demo = get_demo(layout_to_image_generation, cfg, model_fn, noise_schedule)
 
-    demo.launch(share=cfg.share)
+    demo.launch(share=True)

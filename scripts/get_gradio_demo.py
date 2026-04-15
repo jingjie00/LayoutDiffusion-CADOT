@@ -65,8 +65,8 @@ def get_demo(layout_to_image_generation_fn, cfg, model_fn, noise_schedule):
 
             with gr.Column():
                 with gr.Row():
-                    layout_image = gr.Image(label='Layout Image', shape=(256, 256), value=np.ones((256, 256, 3), dtype=np.uint8) * 255).style(width=256, height=256)
-                    generated_image = gr.Image(label='Generated Image', shape=(256, 256)).style(width=256, height=256)
+                    layout_image = gr.Image(label='Layout Image', value=np.ones((256, 256, 3), dtype=np.uint8) * 255)
+                    generated_image = gr.Image(label='Generated Image' )
                 with gr.Row():
                     button_to_update_layout_image = gr.Button(value='Update Layout Image')
                     button_to_update_layout_image.click(fn=update_layout_image, inputs=[custom_layout_dataframe], outputs=[layout_image])
