@@ -63,8 +63,13 @@ python setup.py build develop
 ## Gradio Webui Demo (No need for setup of dataset)
 ```bash
   python scripts/launch_gradio_app.py  \
-  --config_file configs/COCO-stuff_256x256/LayoutDiffusion_large.yaml \
-  sample.pretrained_model_path=./pretrained_models/COCO-stuff_256x256_LayoutDiffusion_large_ema_1150000.pt
+  --config_file configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml \
+  sample.pretrained_model_path=./pretrained_models/COCO-stuff_256x256_LayoutDiffusion_small_ema_1700000.pt
+```
+```bash
+  python scripts/launch_gradio_app.py  \
+  --config_file configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml \
+  sample.pretrained_model_path=./pretrained_models/layout_diffusion_small.pt --share
 ```
 add '--share' after '--config_file XXX' to allow for remote link share
 
@@ -101,9 +106,9 @@ python -m torch.distributed.launch \
 ## Training on Image Space
 ```bash
 python -m torch.distributed.launch \
-       --nproc_per_node 8 \
+       --nproc_per_node 1 \
        scripts/image_train_for_layout.py \
-       --config_file ./configs/COCO-stuff_256x256/LayoutDiffusion_large.yaml
+       --config_file ./configs/COCO-stuff_256x256/LayoutDiffusion_small.yaml
 ```
 
 ## Sampling

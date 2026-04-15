@@ -1,0 +1,1 @@
+oarsub -r "2025-04-22 19:00:00" -l gpu=2,nodes=1,walltime=14:00:00 -q default -t exotic -p gemini
